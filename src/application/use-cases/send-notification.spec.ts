@@ -1,18 +1,6 @@
-import { Notification } from '../entities/notification';
+import { InMemoryNotificationsRepository } from '../../../test/repositories/in-memory-notifications-repository';
 import { NotificationsRepository } from '../repositories/notification-repositories';
 import { SendNotification } from './send-notification';
-
-const notifications: Notification[] = [];
-
-const makeSendNotificationsRepository = (): NotificationsRepository => {
-  class SendNotificationsRepositoryStub implements NotificationsRepository {
-    async create(notification: Notification): Promise<void> {
-      notifications.push(notification);
-    }
-  }
-
-  return new SendNotificationsRepositoryStub();
-};
 
 interface SutProps {
   notificationsRepository: NotificationsRepository;
@@ -20,7 +8,7 @@ interface SutProps {
 }
 
 const makeSut = (): SutProps => {
-  const notificationsRepository = makeSendNotificationsRepository();
+  const notificationsRepository = new InMemoryNotificationsRepository();
   const sut = new SendNotification(notificationsRepository);
 
   return {
@@ -31,14 +19,15 @@ const makeSut = (): SutProps => {
 
 describe('Send notification', () => {
   it('should be able do send notification', async () => {
-    const { sut } = makeSut();
+    const { sut, notificationsRepository } = makeSut();
 
-    await sut.execute({
+    const { notification } = await sut.execute({
       content: 'there is something waiting for you!',
       category: 'not cool',
       recipientId: 'example-recipient-id',
     });
 
-    expect(notifications).toHaveLength(1);
+    expect(notificationsRepository.notifications).toHaveLength(1);
+    expect(notificationsRepository.notifications[0]).toEqual(notification);
   });
 });
