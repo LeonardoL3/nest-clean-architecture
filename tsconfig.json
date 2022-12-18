@@ -12,6 +12,7 @@
     "baseUrl": "./",
     "strict": true,
     "incremental": true,
+    "resolveJsonModule": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
     "noImplicitAny": false,
@@ -30,8 +31,8 @@
         "./src/infra/*"
       ],
       "@test/*": [
-        "./src/test/*"
-      ],
+        "./test/*"
+      ]
     }
   }
 }
