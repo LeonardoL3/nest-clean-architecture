@@ -1,9 +1,14 @@
 import { Content } from './content';
+import { Notification } from './notification';
 
-describe('Notification Content', () => {
-  it('should be able to create a notification content', () => {
-    const content = new Content('Olá, você ja pode retirar sua liçensa.');
-    expect(content).toBeTruthy();
+describe('Notification', () => {
+  it('should be able to create a notification', () => {
+    const notification = new Notification({
+      content: new Content('valid_content'),
+      category: 'valid_category',
+      recipientId: 'example-recipient-id',
+    });
+    expect(notification).toBeTruthy();
   });
 
   it('should not be able to create a notification content with less than 5 characters', () => {
